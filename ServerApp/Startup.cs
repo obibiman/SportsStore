@@ -25,12 +25,14 @@ namespace ServerApp
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(connectionString));
             services.AddControllersWithViews()
-         .AddJsonOptions(opts => {
+         .AddJsonOptions(opts =>
+         {
              opts.JsonSerializerOptions.IgnoreNullValues = true;
          }).AddNewtonsoftJson();
             services.AddRazorPages();
 
-            services.AddSwaggerGen(options => {
+            services.AddSwaggerGen(options =>
+            {
                 options.SwaggerDoc("v1",
                     new OpenApiInfo { Title = "SportsStore API", Version = "v1" });
             });
@@ -51,18 +53,26 @@ namespace ServerApp
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
-            app.UseEndpoints(endpoints => {
+            app.UseEndpoints(endpoints =>
+            {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
+                    name: "angular_fallback",
+                    pattern: "{target:regex(table|detail)}/{*catchall}",
+                    defaults: new { controller = "Home", action = "Index" });
+
                 endpoints.MapRazorPages();
             });
             app.UseSwagger();
-            app.UseSwaggerUI(options => {
+            app.UseSwaggerUI(options =>
+            {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json",
                     "SportsStore API");
             });
-            app.UseSpa(spa => {
+            app.UseSpa(spa =>
+            {
                 string strategy = Configuration
                     .GetValue<string>("DevTools:ConnectionStrategy");
                 if (strategy == "proxy")

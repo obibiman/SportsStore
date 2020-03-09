@@ -136,7 +136,7 @@ namespace ServerApp.Controllers
                                 .First(p => p.ProductId == id);
 
             ProductData pdata = new ProductData { Product = product };
-            //patch.ApplyTo(pdata, ModelState);
+            patch.ApplyTo(pdata, ModelState);
             if (ModelState.IsValid && TryValidateModel(pdata))
             {
                 if (product.Supplier != null && product.Supplier.SupplierId != 0)
