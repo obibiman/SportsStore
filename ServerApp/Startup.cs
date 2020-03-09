@@ -24,7 +24,10 @@ namespace ServerApp
                 Configuration["ConnectionStrings:DefaultConnection"];
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(connectionString));
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+         .AddJsonOptions(opts => {
+             opts.JsonSerializerOptions.IgnoreNullValues = true;
+         }).AddNewtonsoftJson();
             services.AddRazorPages();
 
             services.AddSwaggerGen(options => {
