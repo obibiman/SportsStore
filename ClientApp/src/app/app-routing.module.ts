@@ -7,6 +7,11 @@ import { CheckoutPaymentComponent } from "./store/checkout/checkoutPayment.compo
 import { CheckoutSummaryComponent } from "./store/checkout/checkoutSummary.component";
 import { OrderConfirmationComponent } from "./store/checkout/orderConfirmation.component";
 const routes: Routes = [
+  {
+    path: "admin",
+    loadChildren: () =>
+      import("./admin/admin.module").then(module => module.AdminModule),
+  },
   { path: "checkout/step1", component: CheckoutDetailsComponent },
   { path: "checkout/step2", component: CheckoutPaymentComponent },
   { path: "checkout/step3", component: CheckoutSummaryComponent },

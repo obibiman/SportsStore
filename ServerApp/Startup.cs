@@ -8,6 +8,8 @@ using Microsoft.Extensions.Hosting;
 using ServerApp.Models;
 using Microsoft.OpenApi.Models;
 using System;
+using ServerApp.Models.ServerApp.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace ServerApp
 {
@@ -25,6 +27,13 @@ namespace ServerApp
                 Configuration["ConnectionStrings:DefaultConnection"];
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(connectionString));
+
+
+            services.AddDbContext<IdentityDataContext>(options =>
+               options.UseSqlServer(Configuration["ConnectionStrings:Identity"]));
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                 .AddEntityFrameworkStores<IdentityDataContext>();
+
 
             services.AddControllersWithViews()
                 .AddJsonOptions(opts => {
@@ -64,6 +73,7 @@ namespace ServerApp
             app.UseStaticFiles();
             app.UseSession();
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => {
@@ -73,7 +83,7 @@ namespace ServerApp
 
             endpoints.MapControllerRoute(
             name: "angular_fallback",
-            pattern: "{target:regex(store|cart|checkout)}/{*catchall}",
+            pattern: "{target:regex(store|cart|checkout):nonfile}/{*catchall}",
             defaults: new { controller = "Home", action = "Index" });
 
                 endpoints.MapRazorPages();
@@ -97,6 +107,8 @@ namespace ServerApp
             });
 
             SeedData.SeedDatabase(services.GetRequiredService<DataContext>());
+            IdentitySeedData.SeedDatabase(services).Wait();
+
         }
     }
 }
